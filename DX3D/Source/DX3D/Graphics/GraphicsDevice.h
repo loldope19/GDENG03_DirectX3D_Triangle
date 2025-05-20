@@ -22,7 +22,7 @@ namespace dx3d
     private:
         GraphicsResourceDesc getGraphicsResourceDesc() const noexcept;
 
-    private:
+    public:
         Microsoft::WRL::ComPtr<ID3D11Device> m_d3dDevice{};
         Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_d3dContext{};
         Microsoft::WRL::ComPtr<IDXGIDevice> m_dxgiDevice{};
