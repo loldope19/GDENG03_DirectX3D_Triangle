@@ -18,15 +18,11 @@ namespace dx3d
     public:
         Triangle(const GraphicsResourceDesc& gDesc);
 
-        bool initializeSharedResources();
-
-        void createTriangle(const std::vector<TriangleVertex>& vertices);
-
-        void render(ID3D11DeviceContext& context);
-
-        void renderTriangle(ID3D11DeviceContext& context, size_t index);
-
-        size_t getTriangleCount() const { return m_vertexBuffers.size(); }
+        bool initializeSharedResources();                                       // sets up all shaders (only once)
+        void createTriangle(const std::vector<TriangleVertex>& vertices);       // creates all triangles and subjects them to buffer hell
+        void render(ID3D11DeviceContext& context);                              // renders all triangles
+        void renderTriangle(ID3D11DeviceContext& context, size_t index);        // i don't think i used this tbh
+        size_t getTriangleCount() const { return m_vertexBuffers.size(); }      // gets how many triangles there is
 
     private:
         std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> m_vertexBuffers;
@@ -36,7 +32,6 @@ namespace dx3d
         UINT m_stride;
         UINT m_offset;
 
-        // Flag to track if shared resources are initialized
         bool m_sharedResourcesInitialized = false;
     };
 }

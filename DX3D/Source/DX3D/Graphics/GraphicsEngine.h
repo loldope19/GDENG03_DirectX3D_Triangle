@@ -16,7 +16,7 @@ namespace dx3d
 
         void render(SwapChain& swapChain);
 
-        // Add a triangle at specified position with specified color
+        // add a triangle at specified position with specified color
         void addTriangle(float posX, float posY, float size, float r, float g, float b, float a = 1.0f);
 
     private:

@@ -17,10 +17,8 @@ GraphicsEngine::GraphicsEngine(const GraphicsEngineDesc& desc) : Base(desc.base)
                                 *m_graphicsDevice->m_dxgiFactory.Get() };
     m_triangleManager = std::make_unique<Triangle>(gDesc);
 
-    // Initialize shared triangle resources (shaders, input layout)
     m_triangleManager->initializeSharedResources();
 
-    // Add a default yellow triangle to match original behavior
     addTriangle(0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.5f);
 }
 

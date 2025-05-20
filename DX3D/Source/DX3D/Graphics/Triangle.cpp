@@ -57,7 +57,6 @@ namespace dx3d
 
     void Triangle::createTriangle(const std::vector<TriangleVertex>& vertices)
     {
-        // Ensure shared resources are initialized
         if (!m_sharedResourcesInitialized && !initializeSharedResources())
         {
             DX3DLogErrorAndThrow("Failed to initialize shared resources");
@@ -91,12 +90,12 @@ namespace dx3d
         context.VSSetShader(m_vertexShader->getVertexShader(), nullptr, 0);
         context.PSSetShader(m_pixelShader->getPixelShader(), nullptr, 0);
 
-        // Render all triangles
+        // render all triangles
         for (size_t i = 0; i < m_vertexBuffers.size(); i++)
         {
             ID3D11Buffer* vertexBuffers[] = { m_vertexBuffers[i].Get() };
             context.IASetVertexBuffers(0, 1, vertexBuffers, &m_stride, &m_offset);
-            context.Draw(3, 0); // Each triangle has 3 vertices
+            context.Draw(3, 0); // each triangle has 3 vertices
         }
     }
 
