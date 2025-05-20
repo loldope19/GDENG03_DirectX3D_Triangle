@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GDENG03_DirectXGame", "GDENG03_DirectXGame.vcxproj", "{3A6586DA-8299-4228-898B-08AB23FA40FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A6586DA-8299-4228-898B-08AB23FA40FC}.Debug|x64.ActiveCfg = Debug|x64
+		{3A6586DA-8299-4228-898B-08AB23FA40FC}.Debug|x64.Build.0 = Debug|x64
+		{3A6586DA-8299-4228-898B-08AB23FA40FC}.Debug|x86.ActiveCfg = Debug|Win32
+		{3A6586DA-8299-4228-898B-08AB23FA40FC}.Debug|x86.Build.0 = Debug|Win32
+		{3A6586DA-8299-4228-898B-08AB23FA40FC}.Release|x64.ActiveCfg = Release|x64
+		{3A6586DA-8299-4228-898B-08AB23FA40FC}.Release|x64.Build.0 = Release|x64
+		{3A6586DA-8299-4228-898B-08AB23FA40FC}.Release|x86.ActiveCfg = Release|Win32
+		{3A6586DA-8299-4228-898B-08AB23FA40FC}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {900B459B-5381-477A-B8D3-DC1702C5090B}
+	EndGlobalSection
+EndGlobal
