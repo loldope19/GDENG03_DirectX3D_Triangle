@@ -51,6 +51,7 @@
     <ClCompile Include="DX3D\Source\DX3D\Graphics\Mesh.cpp" />
     <ClCompile Include="DX3D\Source\DX3D\Graphics\Shader.cpp" />
     <ClCompile Include="DX3D\Source\DX3D\Graphics\Triangle.cpp" />
+    <ClCompile Include="DX3D\Source\DX3D\Graphics\Rectangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DX3D\Include\DX3D\Core\Base.h">
@@ -73,5 +74,6 @@
     <ClInclude Include="DX3D\Source\DX3D\Graphics\DeviceContext.h" />
     <ClInclude Include="DX3D\Include\DX3D\Graphics\Shader.h" />
     <ClInclude Include="DX3D\Include\DX3D\Graphics\Triangle.h" />
+    <ClInclude Include="DX3D\Include\DX3D\Graphics\Rectangle.h" />
   </ItemGroup>
 </Project>
