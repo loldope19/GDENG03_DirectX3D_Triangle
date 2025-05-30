@@ -4,6 +4,7 @@
 #include <DX3D/Graphics/Triangle.h> 
 #include <DX3D/Graphics/Rectangle.h>
 #include <vector>
+#include <chrono>
 
 namespace dx3d
 {
@@ -18,13 +19,26 @@ namespace dx3d
         void render(SwapChain& swapChain);
 
         // add a triangle at specified position with specified color
-        void addTriangle(float posX, float posY, float size = 1.0f, 
+        void addTriangle(float posX, float posY, float size = 1.0f,
             float r = -1.0f, float g = -1.0f, float b = -1.0f, float a = 1.0f);
 
         // add a rectangle at specified position with specified size and color
-        void addRectangle(float posX, float posY, float width = 1.0f, float height = 1.0f, 
+        void addRectangle(float posX, float posY, float width = 1.0f, float height = 1.0f,
             float r = -1.0f, float g = -1.0f, float b = -1.0f, float a = 1.0f);
 
+    private:
+        Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;
+        struct AnimationConstants
+        {
+            UINT time;           // time in milliseconds
+            float padding[3];    // padding for 16-byte alignment
+        };
+
+        void addAnimatedRectangle(float posX, float posY, float width = 1.0f, float height = 1.0f,
+            float r = -1.0f, float g = -1.0f, float b = -1.0f, float a = 1.0f);
+
+        void createConstantBuffer();
+        void updateAnimation();
 
     private:
         std::shared_ptr<GraphicsDevice> m_graphicsDevice{};
@@ -32,8 +46,6 @@ namespace dx3d
         GraphicsPipelineStatePtr m_pipeline{};
 
         std::unique_ptr<Triangle> m_triangleManager{};
-        
-        // can handle multiple instances of rectangles/quads
         std::unique_ptr<Rectangle> m_rectangleManager{};
     };
 }

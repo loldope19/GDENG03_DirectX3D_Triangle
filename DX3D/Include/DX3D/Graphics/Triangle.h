@@ -33,5 +33,20 @@ namespace dx3d
         UINT m_offset;
 
         bool m_sharedResourcesInitialized = false;
+
+        Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;
+
+    public:
+        struct AnimationData
+        {
+            float time;
+            float offsetX, offsetY;
+            float scale;
+            float colorR, colorG, colorB, colorA;
+            float padding[2]; // Align to 16 bytes
+        };
+
+        bool createConstantBuffer();
+        void updateAnimation(ID3D11DeviceContext& context, const AnimationData& data);
     };
 }

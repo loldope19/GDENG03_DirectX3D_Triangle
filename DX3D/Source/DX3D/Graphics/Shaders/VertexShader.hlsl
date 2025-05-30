@@ -1,16 +1,30 @@
-struct VSInput {
-    float3 position : POSITION;
+struct VSInput
+{
+    float4 position : POSITION;
+    float4 position1 : POSITION1;
     float4 color : COLOR;
+    float4 color1 : COLOR1;
 };
 
-struct PSInput {
+struct VSOutput
+{
     float4 position : SV_POSITION;
     float4 color : COLOR;
+    float4 color1 : COLOR1;
 };
 
-PSInput main(VSInput input) {
-    PSInput output;
-    output.position = float4(input.position, 1.0f);
+cbuffer constant : register(b0)
+{
+    unsigned int m_time;
+}
+
+VSOutput main(VSInput input)
+{
+    VSOutput output = (VSOutput) 0;
+    
+    output.position = lerp(input.position, input.position1, (sin(m_time / 1000.0f) + 1.0f) / 2.0f);
     output.color = input.color;
+    output.color1 = input.color1;
+    
     return output;
-} 
+}
