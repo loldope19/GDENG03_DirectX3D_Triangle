@@ -24,7 +24,7 @@ namespace dx3d
         m_vertexShader = std::make_unique<Shader>(vertexShaderDesc);
         if (!m_vertexShader->loadFromFile("DX3D/Source/DX3D/Graphics/Shaders/VertexShader.hlsl"))
         {
-            DX3DLogErrorAndThrow("Failed to load vertex shader");
+            DX3DLogThrowError("Failed to load vertex shader");
             return false;
         }
 
@@ -37,7 +37,7 @@ namespace dx3d
         m_pixelShader = std::make_unique<Shader>(pixelShaderDesc);
         if (!m_pixelShader->loadFromFile("DX3D/Source/DX3D/Graphics/Shaders/PixelShader.hlsl"))
         {
-            DX3DLogErrorAndThrow("Failed to load pixel shader");
+            DX3DLogThrowError("Failed to load pixel shader");
             return false;
         }
 
@@ -59,7 +59,7 @@ namespace dx3d
     {
         if (!m_sharedResourcesInitialized && !initializeSharedResources())
         {
-            DX3DLogErrorAndThrow("Failed to initialize shared resources");
+            DX3DLogThrowError("Failed to initialize shared resources");
             return;
         }
 

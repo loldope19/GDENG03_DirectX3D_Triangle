@@ -9,8 +9,8 @@ namespace dx3d
 {
     struct RectangleVertex
     {
-        float x, y, z;    // Position
-        float r, g, b, a; // Color
+        float x, y, z;    // position
+        float r, g, b, a; // color
     };
 
     class Rectangle : public GraphicsResource
@@ -20,8 +20,7 @@ namespace dx3d
 
         bool initializeSharedResources();                                       // sets up all shaders (only once)
         void createRectangle(const std::vector<RectangleVertex>& vertices);     // creates rectangle and subjects it to buffer hell
-        void render(ID3D11DeviceContext& context);                              // renders all rectangles
-        void renderRectangle(ID3D11DeviceContext& context, size_t index);       // render specific rectangle
+        void render(ID3D11DeviceContext& context);                              // renders all rectanglesy
         size_t getRectangleCount() const { return m_vertexBuffers.size(); }     // gets how many rectangles there are
 
     private:

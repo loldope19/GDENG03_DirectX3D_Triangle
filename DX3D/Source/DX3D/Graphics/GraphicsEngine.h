@@ -29,7 +29,11 @@ namespace dx3d
     private:
         std::shared_ptr<GraphicsDevice> m_graphicsDevice{};
         DeviceContextPtr m_deviceContext{};
+        GraphicsPipelineStatePtr m_pipeline{};
+
         std::unique_ptr<Triangle> m_triangleManager{};
+        
+        // can handle multiple instances of rectangles/quads
         std::unique_ptr<Rectangle> m_rectangleManager{};
     };
 }

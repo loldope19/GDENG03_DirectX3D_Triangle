@@ -52,6 +52,8 @@
     <ClCompile Include="DX3D\Source\DX3D\Graphics\Shader.cpp" />
     <ClCompile Include="DX3D\Source\DX3D\Graphics\Triangle.cpp" />
     <ClCompile Include="DX3D\Source\DX3D\Graphics\Rectangle.cpp" />
+    <ClCompile Include="DX3D\Source\DX3D\Graphics\GraphicsPipelineState.cpp" />
+    <ClCompile Include="DX3D\Source\DX3D\Graphics\ShaderBinary.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DX3D\Include\DX3D\Core\Base.h">
@@ -75,5 +77,8 @@
     <ClInclude Include="DX3D\Include\DX3D\Graphics\Shader.h" />
     <ClInclude Include="DX3D\Include\DX3D\Graphics\Triangle.h" />
     <ClInclude Include="DX3D\Include\DX3D\Graphics\Rectangle.h" />
+    <ClInclude Include="DX3D\Source\DX3D\Graphics\GraphicsPipelineState.h" />
+    <ClInclude Include="DX3D\Source\DX3D\Graphics\GraphicsUtils.h" />
+    <ClInclude Include="DX3D\Source\DX3D\Graphics\ShaderBinary.h" />
   </ItemGroup>
 </Project>

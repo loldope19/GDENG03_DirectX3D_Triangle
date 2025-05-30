@@ -14,5 +14,3 @@ namespace dx3d {
 		Rect m_size{};
 	};
 }
-
-

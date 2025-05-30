@@ -12,6 +12,25 @@ GraphicsEngine::GraphicsEngine(const GraphicsEngineDesc& desc) : Base(desc.base)
     auto& device = *m_graphicsDevice;
     m_deviceContext = device.createDeviceContext();
 
+    constexpr char shaderSourceCode[] =
+        R"(
+void VSMain()
+{
+}
+void PSMain()
+{
+}
+)";
+    constexpr char shaderSourceName[] = "Basic";
+    constexpr auto shaderSourceCodeSize = std::size(shaderSourceCode);
+
+    auto vs = device.compileShader({ shaderSourceName, shaderSourceCode, shaderSourceCodeSize,
+        "VSMain", ShaderType::VertexShader });
+    auto ps = device.compileShader({ shaderSourceName, shaderSourceCode, shaderSourceCodeSize,
+        "PSMain", ShaderType::PixelShader });
+
+    m_pipeline = device.createGraphicsPipelineState({ *vs,*ps });
+
     GraphicsResourceDesc gDesc = { {m_logger}, m_graphicsDevice,
                                 *m_graphicsDevice->m_d3dDevice.Get(),
                                 *m_graphicsDevice->m_dxgiFactory.Get() };
@@ -21,9 +40,9 @@ GraphicsEngine::GraphicsEngine(const GraphicsEngineDesc& desc) : Base(desc.base)
     m_triangleManager->initializeSharedResources();
     m_rectangleManager->initializeSharedResources();
 
-    // addRectangle(0.0f, 0.0f);                                   // Rainbow Rectangle
-    // addTriangle(0.0f, 0.0f);                                    // Rainbow Triangle
-    addRectangle(0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.5f, 0.0f);     // Green Rectangle
+    addRectangle(-0.6f, 0.0f, 0.4f, 0.4f, 0.0f, 0.5f, 0.0f);    // left green rectangle
+    addRectangle(0.0f, 0.0f, 0.4f, 0.4f, 1.0f, 0.0f, 0.0f);     // center red rectangle  
+    addRectangle(0.6f, 0.0f, 0.4f, 0.4f, 0.0f, 0.0f, 1.0f);     // right blue rectangle
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -86,6 +105,8 @@ void GraphicsEngine::render(SwapChain& swapChain)
 {
     auto& context = *m_deviceContext;
     context.clearAndSetBackBuffer(swapChain, { 0.f, 0.27f, 0.4f, 1.0f });
+
+    context.setGraphicsPipelineState(*m_pipeline);
 
     // this thing matches the viewport to the window size
     D3D11_VIEWPORT viewport = {};

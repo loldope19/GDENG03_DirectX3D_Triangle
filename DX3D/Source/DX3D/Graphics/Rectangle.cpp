@@ -24,7 +24,7 @@ namespace dx3d
         m_vertexShader = std::make_unique<Shader>(vertexShaderDesc);
         if (!m_vertexShader->loadFromFile("DX3D/Source/DX3D/Graphics/Shaders/VertexShader.hlsl"))
         {
-            DX3DLogErrorAndThrow("Failed to load vertex shader");
+            DX3DLogThrowError("Failed to load vertex shader");
             return false;
         }
 
@@ -37,7 +37,7 @@ namespace dx3d
         m_pixelShader = std::make_unique<Shader>(pixelShaderDesc);
         if (!m_pixelShader->loadFromFile("DX3D/Source/DX3D/Graphics/Shaders/PixelShader.hlsl"))
         {
-            DX3DLogErrorAndThrow("Failed to load pixel shader");
+            DX3DLogThrowError("Failed to load pixel shader");
             return false;
         }
 
@@ -59,13 +59,13 @@ namespace dx3d
     {
         if (!m_sharedResourcesInitialized && !initializeSharedResources())
         {
-            DX3DLogErrorAndThrow("Failed to initialize shared resources");
+            DX3DLogThrowError("Failed to initialize shared resources");
             return;
         }
         
         if (vertices.size() != 4)
         {
-            DX3DLogErrorAndThrow("Rectangle must have exactly 4 vertices");
+            DX3DLogThrowError("Rectangle must have exactly 4 vertices");
             return;
         }
 
@@ -125,21 +125,5 @@ namespace dx3d
             context.IASetIndexBuffer(m_indexBuffers[i].Get(), DXGI_FORMAT_R32_UINT, 0);
             context.DrawIndexed(6, 0, 0); // 6 indices for 2 triangles
         }
-    }
-
-    void Rectangle::renderRectangle(ID3D11DeviceContext& context, size_t index)
-    {
-        if (index >= m_vertexBuffers.size() || !m_sharedResourcesInitialized)
-            return;
-
-        context.IASetInputLayout(m_inputLayout.Get());
-        context.IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        context.VSSetShader(m_vertexShader->getVertexShader(), nullptr, 0);
-        context.PSSetShader(m_pixelShader->getPixelShader(), nullptr, 0);
-
-        ID3D11Buffer* vertexBuffers[] = { m_vertexBuffers[index].Get() };
-        context.IASetVertexBuffers(0, 1, vertexBuffers, &m_stride, &m_offset);
-        context.IASetIndexBuffer(m_indexBuffers[index].Get(), DXGI_FORMAT_R32_UINT, 0);
-        context.DrawIndexed(6, 0, 0);
     }
 }
