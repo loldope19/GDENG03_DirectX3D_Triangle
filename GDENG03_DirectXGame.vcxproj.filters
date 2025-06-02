@@ -54,6 +54,7 @@
     <ClCompile Include="DX3D\Source\DX3D\Graphics\Rectangle.cpp" />
     <ClCompile Include="DX3D\Source\DX3D\Graphics\GraphicsPipelineState.cpp" />
     <ClCompile Include="DX3D\Source\DX3D\Graphics\ShaderBinary.cpp" />
+    <ClCompile Include="DX3D\Source\DX3D\Graphics\Cube.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DX3D\Include\DX3D\Core\Base.h">
@@ -80,5 +81,6 @@
     <ClInclude Include="DX3D\Source\DX3D\Graphics\GraphicsPipelineState.h" />
     <ClInclude Include="DX3D\Source\DX3D\Graphics\GraphicsUtils.h" />
     <ClInclude Include="DX3D\Source\DX3D\Graphics\ShaderBinary.h" />
+    <ClInclude Include="DX3D\Include\DX3D\Graphics\Cube.h" />
   </ItemGroup>
 </Project>

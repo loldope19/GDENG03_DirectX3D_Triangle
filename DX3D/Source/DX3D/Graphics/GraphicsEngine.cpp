@@ -36,13 +36,13 @@ void PSMain()
                                 *m_graphicsDevice->m_dxgiFactory.Get() };
     m_triangleManager = std::make_unique<Triangle>(gDesc);
     m_rectangleManager = std::make_unique<Rectangle>(gDesc);
+    m_cubeManager = std::make_unique<Cube>(gDesc);
 
     m_triangleManager->initializeSharedResources();
     m_rectangleManager->initializeSharedResources();
+    m_cubeManager->initializeSharedResources();
 
-    addRectangle(-0.6f, 0.0f, 0.4f, 0.4f, 0.0f, 0.5f, 0.0f);    // left green rectangle
-    addRectangle(0.0f, 0.0f, 0.4f, 0.4f, 1.0f, 0.0f, 0.0f);     // center red rectangle  
-    addRectangle(0.6f, 0.0f, 0.4f, 0.4f, 0.0f, 0.0f, 1.0f);     // right blue rectangle
+    addCube(0.0f, -0.5f, 0.0f, 0.5f);
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -59,7 +59,7 @@ void GraphicsEngine::addTriangle(float posX, float posY, float size, float r, fl
     std::vector<TriangleVertex> vertices;
     if (r < 0 || g < 0 || b < 0) {
         vertices = {
-            { posX,         posY + size / 2, 0.0f, 1.0f, 0.0f, 0.0f, a },  // Top: Red
+            { posX,         posY + size / 2, 0.0f, 0.0f, 0.0f, 0.0f, a },  // Top: Red
             { posX + size / 2, posY - size / 2, 0.0f, 0.0f, 1.0f, 0.0f, a },  // Bottom right: Green
             { posX - size / 2, posY - size / 2, 0.0f, 0.0f, 0.0f, 1.0f, a }   // Bottom left: Blue
         };
@@ -101,6 +101,41 @@ void dx3d::GraphicsEngine::addRectangle(float posX, float posY, float width, flo
     m_rectangleManager->createRectangle(vertices);
 }
 
+void dx3d::GraphicsEngine::addCube(float posX, float posY, float posZ, float size, float r, float g, float b, float a)
+{
+    std::vector<CubeVertex> vertices;
+    float halfSize = size / 2.0f;
+
+    if (r < 0 || g < 0 || b < 0) {
+        vertices = {
+            { posX - halfSize, posY + halfSize, posZ + halfSize, 1.0f, 0.0f, 0.0f, a },  // Red
+            { posX + halfSize, posY + halfSize, posZ + halfSize, 0.0f, 1.0f, 0.0f, a },  // Green
+            { posX + halfSize, posY - halfSize, posZ + halfSize, 0.0f, 0.0f, 1.0f, a },  // Blue
+            { posX - halfSize, posY - halfSize, posZ + halfSize, 1.0f, 1.0f, 0.0f, a },  // Yellow
+
+            { posX - halfSize, posY + halfSize, posZ - halfSize, 1.0f, 0.0f, 1.0f, a },  // Magenta
+            { posX + halfSize, posY + halfSize, posZ - halfSize, 0.0f, 1.0f, 1.0f, a },  // Cyan
+            { posX + halfSize, posY - halfSize, posZ - halfSize, 1.0f, 1.0f, 1.0f, a },  // White
+            { posX - halfSize, posY - halfSize, posZ - halfSize, 0.5f, 0.5f, 0.5f, a }   // Gray
+        };
+    }
+    else {
+        vertices = {
+            { posX - halfSize, posY + halfSize, posZ + halfSize, r, g, b, a },
+            { posX + halfSize, posY + halfSize, posZ + halfSize, r, g, b, a },
+            { posX + halfSize, posY - halfSize, posZ + halfSize, r, g, b, a },
+            { posX - halfSize, posY - halfSize, posZ + halfSize, r, g, b, a },
+
+            { posX - halfSize, posY + halfSize, posZ - halfSize, r, g, b, a },
+            { posX + halfSize, posY + halfSize, posZ - halfSize, r, g, b, a },
+            { posX + halfSize, posY - halfSize, posZ - halfSize, r, g, b, a },
+            { posX - halfSize, posY - halfSize, posZ - halfSize, r, g, b, a }
+        };
+    }
+
+    m_cubeManager->createCube(vertices);
+}
+
 void GraphicsEngine::render(SwapChain& swapChain)
 {
     auto& context = *m_deviceContext;
@@ -120,6 +155,7 @@ void GraphicsEngine::render(SwapChain& swapChain)
 
     m_triangleManager->render(*context.m_context.Get());
     m_rectangleManager->render(*context.m_context.Get());
+    m_cubeManager->render(*context.m_context.Get());
 
     auto& device = *m_graphicsDevice;
     device.executeCommandList(context);
