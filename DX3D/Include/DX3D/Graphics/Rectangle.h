@@ -20,7 +20,7 @@ namespace dx3d
 
         bool initializeSharedResources();                                       // sets up all shaders (only once)
         void createRectangle(const std::vector<RectangleVertex>& vertices);     // creates rectangle and subjects it to buffer hell
-        void render(ID3D11DeviceContext& context);                              // renders all rectanglesy
+        void render(ID3D11DeviceContext& context);                              // renders all rectangles
         size_t getRectangleCount() const { return m_vertexBuffers.size(); }     // gets how many rectangles there are
 
     private:
