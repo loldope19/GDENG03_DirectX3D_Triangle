@@ -11,7 +11,6 @@ namespace dx3d
     {
         float x, y, z;    // Position
         float r, g, b, a; // Color
-        float nx, ny, nz; // Normal
     };
 
     class Cube : public GraphicsResource
