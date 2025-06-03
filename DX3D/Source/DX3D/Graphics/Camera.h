@@ -30,7 +30,7 @@ namespace dx3d
         float m_nearZ;
         float m_farZ;
 
-        mutable DirectX::XMMATRIX m_cachedViewMatrix;
+        mutable DirectX::XMMATRIX m_cachedViewMatrix = DirectX::XMMATRIX();
         mutable bool m_viewDirty;
     };
 }

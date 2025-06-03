@@ -43,11 +43,11 @@ void PSMain()
     //m_rectangleManager->initializeSharedResources();
     m_cubeManager->initializeSharedResources();
 
-    addCube(0.0f, -0.6f, 0.0f, 0.5f);
-    addCube(0.0f, 0.0f, 0.0f, 0.5f);
-    addCube(0.0f, 0.6f, 0.0f, 0.5f);
-    addCube(0.6f, 0.0f, 0.0f, 0.5f);
-    addCube(-0.6f, 0.0f, 0.0f, 0.5f);
+    addCube(0.0f, -0.6f, 0.0f, 0.5f, 1.0f, 0.0f, 0.0f);
+    addCube(0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 1.0f, 0.0f);
+    addCube(0.0f, 0.6f, 0.0f, 0.5f, 0.0f, 0.0f, 1.0f);
+    addCube(0.6f, 0.0f, 0.0f, 0.5f, 1.0f, 1.0f, 0.0f);
+    addCube(-0.6f, 0.0f, 0.0f, 0.5f, 0.0f, 1.0f, 1.0f);
 
     // light constant buffer
     D3D11_BUFFER_DESC lightBufferDesc = {};

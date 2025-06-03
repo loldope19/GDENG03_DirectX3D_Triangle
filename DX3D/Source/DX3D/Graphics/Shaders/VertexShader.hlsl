@@ -13,4 +13,4 @@ PSInput main(VSInput input) {
     output.position = float4(input.position, 1.0f);
     output.color = input.color;
     return output;
-} 
+}
