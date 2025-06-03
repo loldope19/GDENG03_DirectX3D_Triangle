@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DX3D\Source\DX3D\Graphics\Camera.cpp" />
     <ClCompile Include="DX3D\Source\DX3D\Graphics\Cube.cpp" />
     <ClCompile Include="DX3D\Source\DX3D\Graphics\DeviceContext.cpp" />
     <ClCompile Include="DX3D\Source\DX3D\Game\Display.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="DX3D\Source\DX3D\Graphics\Mesh.cpp" />
     <ClCompile Include="DX3D\Source\DX3D\Graphics\Shader.cpp" />
     <ClCompile Include="DX3D\Source\DX3D\Graphics\Triangle.cpp" />
+    <ClCompile Include="DX3D\Source\DX3D\Input\InputManager.cpp" />
     <ClCompile Include="Game\main.cpp" />
     <ClCompile Include="DX3D\Source\DX3D\Window\Win32\Win32Window.cpp" />
     <ClCompile Include="DX3D\Source\DX3D\Graphics\GraphicsEngine.cpp" />
@@ -158,6 +160,8 @@
     <ClInclude Include="DX3D\Include\DX3D\Graphics\Cube.h" />
     <ClInclude Include="DX3D\Include\DX3D\Graphics\Shader.h" />
     <ClInclude Include="DX3D\Include\DX3D\Graphics\Triangle.h" />
+    <ClInclude Include="DX3D\Include\DX3D\Input\InputManager.h" />
+    <ClInclude Include="DX3D\Source\DX3D\Graphics\Camera.h" />
     <ClInclude Include="DX3D\Source\DX3D\Graphics\DeviceContext.h" />
     <ClInclude Include="DX3D\Include\DX3D\Game\Display.h" />
     <ClInclude Include="DX3D\Include\DX3D\All.h" />

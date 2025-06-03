@@ -4,6 +4,7 @@
 #include <DX3D/Graphics/Triangle.h> 
 #include <DX3D/Graphics/Rectangle.h>
 #include <DX3D/Graphics/Cube.h>
+#include <DX3D/Graphics/Camera.h>
 #include <vector>
 
 namespace dx3d
@@ -17,6 +18,7 @@ namespace dx3d
         GraphicsDevice& getGraphicsDevice() noexcept;
 
         void render(SwapChain& swapChain);
+        void setCamera(Camera* camera) { m_camera = camera; }
 
         // add a triangle at specified position with specified color
         void addTriangle(float posX, float posY, float size = 1.0f,
@@ -34,6 +36,7 @@ namespace dx3d
         std::shared_ptr<GraphicsDevice> m_graphicsDevice{};
         DeviceContextPtr m_deviceContext{};
         GraphicsPipelineStatePtr m_pipeline{};
+        Camera* m_camera{ nullptr };
 
         std::unique_ptr<Triangle> m_triangleManager{};
         std::unique_ptr<Rectangle> m_rectangleManager{};
