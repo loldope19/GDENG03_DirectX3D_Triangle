@@ -46,11 +46,11 @@ namespace dx3d
         std::shared_ptr<GraphicsDevice> m_graphicsDevice{};
         DeviceContextPtr m_deviceContext{};
         GraphicsPipelineStatePtr m_pipeline{};
-        Camera* m_camera{ nullptr };
+        Camera* m_camera{ nullptr };              // practically unused -_-
 
         std::unique_ptr<Triangle> m_triangleManager{};
         std::unique_ptr<Rectangle> m_rectangleManager{};
-        std::unique_ptr<Cube> m_cubeManager{};
+        std::unique_ptr<Cube> m_cubeManager{};   // only one used out of all managers
 
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_lightConstantBuffer{};
         LightConstantBufferData m_lightBufferData{};

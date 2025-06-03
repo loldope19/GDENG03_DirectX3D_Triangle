@@ -43,11 +43,11 @@ void PSMain()
     //m_rectangleManager->initializeSharedResources();
     m_cubeManager->initializeSharedResources();
 
-    addCube(0.0f, -0.5f, 0.0f, 0.5f);
+    addCube(0.0f, -0.6f, 0.0f, 0.5f);
     addCube(0.0f, 0.0f, 0.0f, 0.5f);
-    addCube(0.0f, 0.5f, 0.0f, 0.5f);
-    addCube(0.5f, 0.0f, 0.0f, 0.5f);
-    addCube(-0.5f, 0.0f, 0.0f, 0.5f);
+    addCube(0.0f, 0.6f, 0.0f, 0.5f);
+    addCube(0.6f, 0.0f, 0.0f, 0.5f);
+    addCube(-0.6f, 0.0f, 0.0f, 0.5f);
 
     // light constant buffer
     D3D11_BUFFER_DESC lightBufferDesc = {};
@@ -73,7 +73,10 @@ GraphicsDevice& GraphicsEngine::getGraphicsDevice() noexcept
     return *m_graphicsDevice;
 }
 
-void dx3d::GraphicsEngine::updateLightData(const DirectX::XMFLOAT2& mousePos, const DirectX::XMFLOAT2& screenRes)
+// A new public method to allow the Game class to send the 
+// latest mouse position and screen resolution to the GraphicsEngine.
+void dx3d::GraphicsEngine::updateLightData(
+    const DirectX::XMFLOAT2& mousePos, const DirectX::XMFLOAT2& screenRes)
 {
     m_lightBufferData.lightScreenPos = mousePos;
     m_lightBufferData.screenResolution = screenRes;

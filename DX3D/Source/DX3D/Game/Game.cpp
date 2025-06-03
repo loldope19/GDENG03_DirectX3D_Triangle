@@ -37,23 +37,25 @@ void dx3d::Game::onInternalUpdate()
     m_inputManager->update();
     handleInput();
 
-    // Update light data for GraphicsEngine
+    // update light data for GraphicsEngine
     POINT screenMousePos = m_inputManager->getScreenMousePosition();
 
-    // Convert screen mouse coordinates to client area coordinates
+    // convert screen mouse to client area coords
     HWND hwnd = static_cast<HWND>(m_display->getWindowHandle());
     POINT clientMousePos = screenMousePos;
     ScreenToClient(hwnd, &clientMousePos);
 
-    // Get client area dimensions (render target size)
+    // get client area dimensions (render target size)
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
     m_display->getSwapChain().m_swapChain->GetDesc(&swapChainDesc);
 
-    DirectX::XMFLOAT2 lightPos = { static_cast<float>(clientMousePos.x), static_cast<float>(clientMousePos.y) };
-    DirectX::XMFLOAT2 screenRes = { static_cast<float>(swapChainDesc.BufferDesc.Width), static_cast<float>(swapChainDesc.BufferDesc.Height) };
+    DirectX::XMFLOAT2 lightPos = { static_cast<float>(clientMousePos.x), 
+                                    static_cast<float>(clientMousePos.y) };
+    DirectX::XMFLOAT2 screenRes = { static_cast<float>(swapChainDesc.BufferDesc.Width), 
+                                    static_cast<float>(swapChainDesc.BufferDesc.Height) };
 
+    // pass everything to graphics engine
     m_graphicsEngine->updateLightData(lightPos, screenRes);
-
     m_graphicsEngine->render(m_display->getSwapChain());
 }
 
