@@ -37,4 +37,8 @@ namespace dx3d
     {
         return m_deltaY;
     }
+    POINT InputManager::getScreenMousePosition() const
+    {
+        return m_prevMousePos;
+    }
 }

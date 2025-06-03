@@ -6,9 +6,16 @@
 #include <DX3D/Graphics/Cube.h>
 #include <DX3D/Graphics/Camera.h>
 #include <vector>
+#include <DirectXMath.h>
 
 namespace dx3d
 {
+    struct LightConstantBufferData
+    {
+        DirectX::XMFLOAT2 lightScreenPos;
+        DirectX::XMFLOAT2 screenResolution;
+    };
+
     class GraphicsEngine final : public Base
     {
     public:
@@ -19,6 +26,9 @@ namespace dx3d
 
         void render(SwapChain& swapChain);
         void setCamera(Camera* camera) { m_camera = camera; }
+
+        // method to update light data from Game class
+        void updateLightData(const DirectX::XMFLOAT2& mousePos, const DirectX::XMFLOAT2& screenRes);
 
         // add a triangle at specified position with specified color
         void addTriangle(float posX, float posY, float size = 1.0f,
@@ -41,5 +51,8 @@ namespace dx3d
         std::unique_ptr<Triangle> m_triangleManager{};
         std::unique_ptr<Rectangle> m_rectangleManager{};
         std::unique_ptr<Cube> m_cubeManager{};
+
+        Microsoft::WRL::ComPtr<ID3D11Buffer> m_lightConstantBuffer{};
+        LightConstantBufferData m_lightBufferData{};
     };
 }

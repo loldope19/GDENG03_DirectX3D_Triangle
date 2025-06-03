@@ -3,6 +3,9 @@
 #include <DX3D/Graphics/GraphicsEngine.h>
 #include <DX3D/Core/Logger.h>
 #include <DX3D/Game/Display.h>
+#include <DX3D/Graphics/SwapChain.h>
+
+#include <DirectXMath.h>
 
 dx3d::Game::Game(const GameDesc& desc) :
     Base({ *std::make_unique<Logger>(desc.logLevel).release() }),
@@ -31,7 +34,26 @@ dx3d::Game::~Game()
 
 void dx3d::Game::onInternalUpdate()
 {
+    m_inputManager->update();
     handleInput();
+
+    // Update light data for GraphicsEngine
+    POINT screenMousePos = m_inputManager->getScreenMousePosition();
+
+    // Convert screen mouse coordinates to client area coordinates
+    HWND hwnd = static_cast<HWND>(m_display->getWindowHandle());
+    POINT clientMousePos = screenMousePos;
+    ScreenToClient(hwnd, &clientMousePos);
+
+    // Get client area dimensions (render target size)
+    DXGI_SWAP_CHAIN_DESC swapChainDesc;
+    m_display->getSwapChain().m_swapChain->GetDesc(&swapChainDesc);
+
+    DirectX::XMFLOAT2 lightPos = { static_cast<float>(clientMousePos.x), static_cast<float>(clientMousePos.y) };
+    DirectX::XMFLOAT2 screenRes = { static_cast<float>(swapChainDesc.BufferDesc.Width), static_cast<float>(swapChainDesc.BufferDesc.Height) };
+
+    m_graphicsEngine->updateLightData(lightPos, screenRes);
+
     m_graphicsEngine->render(m_display->getSwapChain());
 }
 

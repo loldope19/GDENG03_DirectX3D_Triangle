@@ -4,6 +4,7 @@
 #include <DX3D/Graphics/Camera.h>
 #include <DX3D/Input/InputManager.h>
 
+
 namespace dx3d {
 	class Game : public Base
 	{

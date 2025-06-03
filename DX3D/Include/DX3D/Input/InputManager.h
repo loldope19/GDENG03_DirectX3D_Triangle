@@ -12,6 +12,7 @@ namespace dx3d
 
         float getMouseDeltaX() const;
         float getMouseDeltaY() const;
+        POINT getScreenMousePosition() const;
 
     private:
         POINT m_prevMousePos{};

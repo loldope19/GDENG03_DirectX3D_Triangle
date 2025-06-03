@@ -2,6 +2,7 @@
 #include <DX3D/Graphics/GraphicsDevice.h>
 #include <DX3D/Graphics/DeviceContext.h>
 #include <DX3D/Graphics/SwapChain.h>
+#include <DX3D/Graphics/GraphicsLogUtils.h>
 
 using namespace dx3d;
 
@@ -38,11 +39,29 @@ void PSMain()
     m_rectangleManager = std::make_unique<Rectangle>(gDesc);
     m_cubeManager = std::make_unique<Cube>(gDesc);
 
-    m_triangleManager->initializeSharedResources();
-    m_rectangleManager->initializeSharedResources();
+    //m_triangleManager->initializeSharedResources();
+    //m_rectangleManager->initializeSharedResources();
     m_cubeManager->initializeSharedResources();
 
     addCube(0.0f, -0.5f, 0.0f, 0.5f);
+    addCube(0.0f, 0.0f, 0.0f, 0.5f);
+    addCube(0.0f, 0.5f, 0.0f, 0.5f);
+    addCube(0.5f, 0.0f, 0.0f, 0.5f);
+    addCube(-0.5f, 0.0f, 0.0f, 0.5f);
+
+    // light constant buffer
+    D3D11_BUFFER_DESC lightBufferDesc = {};
+    lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    lightBufferDesc.ByteWidth = sizeof(LightConstantBufferData);
+    lightBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    lightBufferDesc.MiscFlags = 0;
+    lightBufferDesc.StructureByteStride = 0;
+
+    DX3DGraphicsLogThrowOnFail(
+        m_graphicsDevice->m_d3dDevice->CreateBuffer(&lightBufferDesc, nullptr, &m_lightConstantBuffer),
+        "Failed to create light constant buffer"
+    );
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -52,6 +71,12 @@ GraphicsEngine::~GraphicsEngine()
 GraphicsDevice& GraphicsEngine::getGraphicsDevice() noexcept
 {
     return *m_graphicsDevice;
+}
+
+void dx3d::GraphicsEngine::updateLightData(const DirectX::XMFLOAT2& mousePos, const DirectX::XMFLOAT2& screenRes)
+{
+    m_lightBufferData.lightScreenPos = mousePos;
+    m_lightBufferData.screenResolution = screenRes;
 }
 
 void GraphicsEngine::addTriangle(float posX, float posY, float size, float r, float g, float b, float a)
@@ -141,7 +166,19 @@ void GraphicsEngine::render(SwapChain& swapChain)
     auto& context = *m_deviceContext;
     context.clearAndSetBackBuffer(swapChain, { 0.f, 0.27f, 0.4f, 1.0f });
 
-    context.setGraphicsPipelineState(*m_pipeline);
+    // shaders used by my shape managers will override this so will comment this out for now
+    // context.setGraphicsPipelineState(*m_pipeline);
+
+    // update and set the light constant buffer for my pixel shader
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    HRESULT hr = context.m_context->Map(m_lightConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    if (SUCCEEDED(hr)) {
+        memcpy(mappedResource.pData, &m_lightBufferData, sizeof(LightConstantBufferData));
+        context.m_context->Unmap(m_lightConstantBuffer.Get(), 0);
+    }
+
+    // set constant buffer to a specific slot for the pixel shader (e.g., slot 1, (b1))
+    context.m_context->PSSetConstantBuffers(1, 1, m_lightConstantBuffer.GetAddressOf());
 
     // this thing matches the viewport to the window size
     D3D11_VIEWPORT viewport = {};
@@ -153,8 +190,8 @@ void GraphicsEngine::render(SwapChain& swapChain)
     viewport.MaxDepth = 1.0f;
     context.m_context->RSSetViewports(1, &viewport);
 
-    m_triangleManager->render(*context.m_context.Get());
-    m_rectangleManager->render(*context.m_context.Get());
+    //m_triangleManager->render(*context.m_context.Get());
+    //m_rectangleManager->render(*context.m_context.Get());
     m_cubeManager->render(*context.m_context.Get());
 
     auto& device = *m_graphicsDevice;
