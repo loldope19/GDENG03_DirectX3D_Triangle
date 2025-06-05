@@ -2,6 +2,10 @@
 #include <DX3D/Graphics/GraphicsDevice.h>
 #include <DX3D/Graphics/DeviceContext.h>
 #include <DX3D/Graphics/SwapChain.h>
+#include <DX3D/Graphics/AnimatedRectangle.h>
+#include <DX3D/Core/EngineTime.h>
+#include <cmath>
+#include <chrono>
 
 using namespace dx3d;
 
@@ -37,12 +41,54 @@ void PSMain()
     m_triangleManager = std::make_unique<Triangle>(gDesc);
     m_rectangleManager = std::make_unique<Rectangle>(gDesc);
     m_cubeManager = std::make_unique<Cube>(gDesc);
+    m_animatedRectangleManager = std::make_unique<AnimatedRectangle>(gDesc);
 
     m_triangleManager->initializeSharedResources();
     m_rectangleManager->initializeSharedResources();
     m_cubeManager->initializeSharedResources();
+    m_animatedRectangleManager->initializeSharedResources();
 
-    addCube(0.0f, -0.5f, 0.0f, 0.5f);
+    //addRectangle(0.0f, 0.0f, 0.5f, 0.5f);
+    
+    // Slide 13 - Engine Time
+    /*
+    std::array<VertexState, 4> stateA_verts = { {
+            {-0.1f,  0.7f, 0.0f, {1.0f, 1.0f, 0.0f, 1.0f}}, // Yellow
+            { 0.8f,  0.7f, 0.0f, {0.0f, 0.0f, 1.0f, 1.0f}}, // Blue
+            { 0.7f, -0.7f, 0.0f, {1.0f, 0.0f, 0.0f, 1.0f}}, // Red
+            {-0.4f, -0.1f, 0.0f, {0.0f, 1.0f, 0.0f, 1.0f}}  // Green
+        } 
+    };
+
+    std::array<VertexState, 4> stateB_verts = { {
+            {-0.8f,  0.2f, 0.0f, {1.0f, 1.0f, 0.0f, 1.0f}}, // Yellow
+            { 0.2f,  0.2f, 0.0f, {1.0f, 1.0f, 1.0f, 1.0f}}, // White
+            { 0.3f, -0.4f, 0.0f, {0.0f, 0.0f, 1.0f, 1.0f}}, // Blue
+            {-0.7f, -0.9f, 0.0f, {0.1f, 0.0f, 0.1f, 1.0f}}  // Black
+        } 
+    };
+    */
+
+    // Slide 14 - Replication
+    
+    std::array<VertexState, 4> stateA_verts = { {
+            {-0.1f,  0.8f, 0.0f, {1.0f, 1.0f, 0.0f, 1.0f}}, // Yellow
+            { 0.9f,  0.8f, 0.0f, {0.0f, 0.0f, 1.0f, 1.0f}}, // Blue
+            { 0.1f, -0.7f, 0.0f, {1.0f, 0.0f, 0.0f, 1.0f}}, // Red
+            {-0.3f, -0.1f, 0.0f, {0.0f, 1.0f, 0.0f, 1.0f}}  // Green
+        }
+    };
+
+    std::array<VertexState, 4> stateB_verts = { {
+            {-0.9f,  0.2f, 0.0f, {1.0f, 1.0f, 0.0f, 1.0f}}, // Yellow
+            {-0.7f, -0.9f, 0.0f, {1.0f, 1.0f, 1.0f, 1.0f}}, // White (same position as black)
+            { 1.0f, -0.4f, 0.0f, {0.0f, 0.0f, 2.0f, 1.0f}}, // Blue
+            {-0.7f, -0.9f, 0.0f, {0.1f, 0.0f, 0.1f, 1.0f}}  // Black
+        }
+    };
+    
+
+    addAnimatedRectangle(stateA_verts, stateB_verts);
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -136,6 +182,33 @@ void dx3d::GraphicsEngine::addCube(float posX, float posY, float posZ, float siz
     m_cubeManager->createCube(vertices);
 }
 
+void dx3d::GraphicsEngine::addAnimatedRectangle(const std::array<VertexState, 4>& state_A_vertices, const std::array<VertexState, 4>& state_B_vertices)
+{
+    std::vector<AnimatedRectangleVertex> animatedVertices(4);
+
+    for (int i = 0; i < 4; ++i) {
+        animatedVertices[i].posX_A = state_A_vertices[i].x;
+        animatedVertices[i].posY_A = state_A_vertices[i].y;
+        animatedVertices[i].posZ_A = state_A_vertices[i].z;
+        animatedVertices[i].r_A = state_A_vertices[i].color.x;
+        animatedVertices[i].g_A = state_A_vertices[i].color.y;
+        animatedVertices[i].b_A = state_A_vertices[i].color.z;
+        animatedVertices[i].a_A = state_A_vertices[i].color.w;
+
+        animatedVertices[i].posX_B = state_B_vertices[i].x;
+        animatedVertices[i].posY_B = state_B_vertices[i].y;
+        animatedVertices[i].posZ_B = state_B_vertices[i].z;
+        animatedVertices[i].r_B = state_B_vertices[i].color.x;
+        animatedVertices[i].g_B = state_B_vertices[i].color.y;
+        animatedVertices[i].b_B = state_B_vertices[i].color.z;
+        animatedVertices[i].a_B = state_B_vertices[i].color.w;
+    }
+
+    if (m_animatedRectangleManager) {
+        m_animatedRectangleManager->createAnimatedRectangle(animatedVertices);
+    }
+}
+
 void GraphicsEngine::render(SwapChain& swapChain)
 {
     auto& context = *m_deviceContext;
@@ -156,6 +229,20 @@ void GraphicsEngine::render(SwapChain& swapChain)
     m_triangleManager->render(*context.m_context.Get());
     m_rectangleManager->render(*context.m_context.Get());
     m_cubeManager->render(*context.m_context.Get());
+
+    // updates and renders animated rectangle
+    if (m_animatedRectangleManager) {
+        static float accumulatedTime = 0.0f;
+
+        double dt = dx3d::EngineTime::getDeltaTime();
+        accumulatedTime += static_cast<float>(dt);
+
+        float animationSpeed = 1.0f;
+        float interpFactor = (sinf(accumulatedTime * animationSpeed) + 1.0f) / 2.0f;
+
+        m_animatedRectangleManager->updateAnimation(*context.m_context.Get(), interpFactor);
+        m_animatedRectangleManager->render(*context.m_context.Get());
+    }
 
     auto& device = *m_graphicsDevice;
     device.executeCommandList(context);

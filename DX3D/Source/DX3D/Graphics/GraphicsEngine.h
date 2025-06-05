@@ -4,10 +4,18 @@
 #include <DX3D/Graphics/Triangle.h> 
 #include <DX3D/Graphics/Rectangle.h>
 #include <DX3D/Graphics/Cube.h>
+#include <DX3D/Graphics/AnimatedRectangle.h>
+#include <DX3D/Math/Vec4.h>
+#include <array>
 #include <vector>
 
 namespace dx3d
 {
+    struct VertexState {
+        float x, y, z;
+        Vec4 color;
+    };
+
     class GraphicsEngine final : public Base
     {
     public:
@@ -30,6 +38,11 @@ namespace dx3d
         void addCube(float posX, float posY, float posZ, float size = 1.0f,
             float r = -1.0f, float g = -1.0f, float b = -1.0f, float a = 1.0f);
 
+        void addAnimatedRectangle(
+            const std::array<VertexState, 4>& state_A_vertices,
+            const std::array<VertexState, 4>& state_B_vertices
+        );
+
     private:
         std::shared_ptr<GraphicsDevice> m_graphicsDevice{};
         DeviceContextPtr m_deviceContext{};
@@ -38,5 +51,6 @@ namespace dx3d
         std::unique_ptr<Triangle> m_triangleManager{};
         std::unique_ptr<Rectangle> m_rectangleManager{};
         std::unique_ptr<Cube> m_cubeManager{};
+        std::unique_ptr<AnimatedRectangle> m_animatedRectangleManager{};
     };
 }
