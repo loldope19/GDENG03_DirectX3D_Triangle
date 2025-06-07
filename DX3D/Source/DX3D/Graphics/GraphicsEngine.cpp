@@ -4,10 +4,16 @@
 #include <DX3D/Graphics/SwapChain.h>
 #include <DX3D/Graphics/AnimatedRectangle.h>
 #include <DX3D/Core/EngineTime.h>
+#include <DX3D/Math/Vec3.h>
 #include <cmath>
 #include <chrono>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 
 using namespace dx3d;
+
+bool GraphicsEngine::s_rotationEnabled = false;
 
 GraphicsEngine::GraphicsEngine(const GraphicsEngineDesc& desc) : Base(desc.base)
 {
@@ -40,12 +46,10 @@ void PSMain()
                                 *m_graphicsDevice->m_dxgiFactory.Get() };
     m_triangleManager = std::make_unique<Triangle>(gDesc);
     m_rectangleManager = std::make_unique<Rectangle>(gDesc);
-    m_cubeManager = std::make_unique<Cube>(gDesc);
     m_animatedRectangleManager = std::make_unique<AnimatedRectangle>(gDesc);
 
     m_triangleManager->initializeSharedResources();
     m_rectangleManager->initializeSharedResources();
-    m_cubeManager->initializeSharedResources();
     m_animatedRectangleManager->initializeSharedResources();
 
     //addRectangle(0.0f, 0.0f, 0.5f, 0.5f);
@@ -70,7 +74,7 @@ void PSMain()
     */
 
     // Slide 14 - Replication
-    
+    /*
     std::array<VertexState, 4> stateA_verts = { {
             {-0.1f,  0.8f, 0.0f, {1.0f, 1.0f, 0.0f, 1.0f}}, // Yellow
             { 0.9f,  0.8f, 0.0f, {0.0f, 0.0f, 1.0f, 1.0f}}, // Blue
@@ -86,9 +90,43 @@ void PSMain()
             {-0.7f, -0.9f, 0.0f, {0.1f, 0.0f, 0.1f, 1.0f}}  // Black
         }
     };
-    
+    */
 
-    addAnimatedRectangle(stateA_verts, stateB_verts);
+    // addAnimatedRectangle(stateA_verts, stateB_verts);
+
+    srand(static_cast<unsigned int>(time(NULL)));
+
+    const int numCubes = 100;
+    const float areaSize = 5.0f;
+
+    for (int i = 0; i < numCubes; ++i)
+    {
+        Vec3 pos;
+        pos.x = (static_cast<float>(rand()) / RAND_MAX * 2.0f - 1.0f) * areaSize;
+        pos.y = (static_cast<float>(rand()) / RAND_MAX * 2.0f - 1.0f) * areaSize;
+        pos.z = (static_cast<float>(rand()) / RAND_MAX * 2.0f - 1.0f) * 1.5f;
+
+        Vec3 axis(
+            static_cast<float>(rand()) / RAND_MAX * 2.0f - 1.0f,
+            static_cast<float>(rand()) / RAND_MAX * 2.0f - 1.0f,
+            static_cast<float>(rand()) / RAND_MAX * 2.0f - 1.0f
+        );
+        axis.normalize();
+
+        const float speed = (static_cast<float>(rand()) / RAND_MAX) * 5.0f + 0.5f;
+
+        createCube(pos, { 1.0f, 1.0f, 1.0f }, axis, speed);
+    }
+
+    float width = 1280.0f;
+    float height = 720.0f;
+    float aspectRatio = width / height;
+    float fov = 90.0f; // degrees
+    float nearPlane = 0.1f;
+    float farPlane = 1000.0f;
+    m_projectionMatrix = Matrix4x4::perspective(fov, aspectRatio, nearPlane, farPlane);
+
+    m_viewMatrix = Matrix4x4::lookAt({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -147,39 +185,20 @@ void dx3d::GraphicsEngine::addRectangle(float posX, float posY, float width, flo
     m_rectangleManager->createRectangle(vertices);
 }
 
-void dx3d::GraphicsEngine::addCube(float posX, float posY, float posZ, float size, float r, float g, float b, float a)
+
+
+void dx3d::GraphicsEngine::createCube(const Vec3& position, const Vec3& scale, const Vec3& rotationAxis, float rotationSpeed)
 {
-    std::vector<CubeVertex> vertices;
-    float halfSize = size / 2.0f;
+    GraphicsResourceDesc gDesc = {
+        {m_logger},
+        m_graphicsDevice,
+        *m_graphicsDevice->m_d3dDevice.Get(),
+        *m_graphicsDevice->m_dxgiFactory.Get() };
 
-    if (r < 0 || g < 0 || b < 0) {
-        vertices = {
-            { posX - halfSize, posY + halfSize, posZ + halfSize, 1.0f, 0.0f, 0.0f, a },  // Red
-            { posX + halfSize, posY + halfSize, posZ + halfSize, 0.0f, 1.0f, 0.0f, a },  // Green
-            { posX + halfSize, posY - halfSize, posZ + halfSize, 0.0f, 0.0f, 1.0f, a },  // Blue
-            { posX - halfSize, posY - halfSize, posZ + halfSize, 1.0f, 1.0f, 0.0f, a },  // Yellow
-
-            { posX - halfSize, posY + halfSize, posZ - halfSize, 1.0f, 0.0f, 1.0f, a },  // Magenta
-            { posX + halfSize, posY + halfSize, posZ - halfSize, 0.0f, 1.0f, 1.0f, a },  // Cyan
-            { posX + halfSize, posY - halfSize, posZ - halfSize, 1.0f, 1.0f, 1.0f, a },  // White
-            { posX - halfSize, posY - halfSize, posZ - halfSize, 0.5f, 0.5f, 0.5f, a }   // Gray
-        };
-    }
-    else {
-        vertices = {
-            { posX - halfSize, posY + halfSize, posZ + halfSize, r, g, b, a },
-            { posX + halfSize, posY + halfSize, posZ + halfSize, r, g, b, a },
-            { posX + halfSize, posY - halfSize, posZ + halfSize, r, g, b, a },
-            { posX - halfSize, posY - halfSize, posZ + halfSize, r, g, b, a },
-
-            { posX - halfSize, posY + halfSize, posZ - halfSize, r, g, b, a },
-            { posX + halfSize, posY + halfSize, posZ - halfSize, r, g, b, a },
-            { posX + halfSize, posY - halfSize, posZ - halfSize, r, g, b, a },
-            { posX - halfSize, posY - halfSize, posZ - halfSize, r, g, b, a }
-        };
-    }
-
-    m_cubeManager->createCube(vertices);
+    auto cube = std::make_unique<Cube>(gDesc, rotationAxis, rotationSpeed);
+    cube->setPosition(position);
+    cube->setScale(scale);
+    m_cubes.push_back(std::move(cube));
 }
 
 void dx3d::GraphicsEngine::addAnimatedRectangle(const std::array<VertexState, 4>& state_A_vertices, const std::array<VertexState, 4>& state_B_vertices)
@@ -209,6 +228,16 @@ void dx3d::GraphicsEngine::addAnimatedRectangle(const std::array<VertexState, 4>
     }
 }
 
+void GraphicsEngine::toggleRotation()
+{
+    s_rotationEnabled = !s_rotationEnabled;
+}
+
+bool GraphicsEngine::isRotationEnabled()
+{
+    return s_rotationEnabled;
+}
+
 void GraphicsEngine::render(SwapChain& swapChain)
 {
     auto& context = *m_deviceContext;
@@ -228,13 +257,17 @@ void GraphicsEngine::render(SwapChain& swapChain)
 
     m_triangleManager->render(*context.m_context.Get());
     m_rectangleManager->render(*context.m_context.Get());
-    m_cubeManager->render(*context.m_context.Get());
+
+    double dt = dx3d::EngineTime::getDeltaTime();
+    for (auto& cube : m_cubes)
+    {
+        cube->update(static_cast<float>(dt));
+        cube->render(*m_deviceContext->m_context.Get(), m_viewMatrix, m_projectionMatrix);
+    }
 
     // updates and renders animated rectangle
     if (m_animatedRectangleManager) {
         static float accumulatedTime = 0.0f;
-
-        double dt = dx3d::EngineTime::getDeltaTime();
         accumulatedTime += static_cast<float>(dt);
 
         float animationSpeed = 1.0f;

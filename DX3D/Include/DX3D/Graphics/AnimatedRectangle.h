@@ -29,19 +29,19 @@ namespace dx3d
 
         bool initializeSharedResources();
         void createAnimatedRectangle(const std::vector<AnimatedRectangleVertex>& vertices);
-        void updateAnimation(ID3D11DeviceContext& context, float interpolationFactor); // Updates the constant buffer
+        void updateAnimation(ID3D11DeviceContext& context, float interpolationFactor);
         void render(ID3D11DeviceContext& context);
         size_t getRectangleCount() const { return m_vertexBuffers.size(); }
 
     private:
         std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> m_vertexBuffers;
-        std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> m_indexBuffers; // For indexed drawing
+        std::vector<Microsoft::WRL::ComPtr<ID3D11Buffer>> m_indexBuffers;
         Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
         std::unique_ptr<Shader> m_vertexShader;
-        std::unique_ptr<Shader> m_pixelShader; // Can reuse existing pixel shader
-        Microsoft::WRL::ComPtr<ID3D11Buffer> m_animationConstantBuffer; // Buffer for interpolationFactor
+        std::unique_ptr<Shader> m_pixelShader;
+        Microsoft::WRL::ComPtr<ID3D11Buffer> m_animationConstantBuffer;
 
-        UINT m_stride; // Size of AnimatedRectangleVertex
+        UINT m_stride;
         UINT m_offset;
         bool m_sharedResourcesInitialized = false;
     };

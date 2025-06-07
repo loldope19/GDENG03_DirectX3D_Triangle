@@ -6,6 +6,7 @@
 #include <DX3D/Graphics/Cube.h>
 #include <DX3D/Graphics/AnimatedRectangle.h>
 #include <DX3D/Math/Vec4.h>
+#include <DX3D/Math/Matrix4x4.h>
 #include <array>
 #include <vector>
 
@@ -35,13 +36,15 @@ namespace dx3d
             float r = -1.0f, float g = -1.0f, float b = -1.0f, float a = 1.0f);
 
         // add a cube at specified position with specified size and color
-        void addCube(float posX, float posY, float posZ, float size = 1.0f,
-            float r = -1.0f, float g = -1.0f, float b = -1.0f, float a = 1.0f);
+        void createCube(const Vec3& position, const Vec3& scale, const Vec3& rotationAxis, float rotationSpeed);
 
         void addAnimatedRectangle(
             const std::array<VertexState, 4>& state_A_vertices,
             const std::array<VertexState, 4>& state_B_vertices
         );
+
+        static void toggleRotation();
+        static bool isRotationEnabled();
 
     private:
         std::shared_ptr<GraphicsDevice> m_graphicsDevice{};
@@ -50,7 +53,12 @@ namespace dx3d
 
         std::unique_ptr<Triangle> m_triangleManager{};
         std::unique_ptr<Rectangle> m_rectangleManager{};
-        std::unique_ptr<Cube> m_cubeManager{};
+        std::vector<std::unique_ptr<Cube>> m_cubes;
         std::unique_ptr<AnimatedRectangle> m_animatedRectangleManager{};
+
+        static bool s_rotationEnabled;
+
+        Matrix4x4 m_viewMatrix;
+        Matrix4x4 m_projectionMatrix;
     };
 }

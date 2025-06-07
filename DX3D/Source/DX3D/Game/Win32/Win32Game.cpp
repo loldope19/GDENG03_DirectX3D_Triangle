@@ -1,6 +1,7 @@
 #include <DX3D/Game/Game.h>
 #include <DX3D/Core/EngineTime.h>
 #include <Windows.h>
+#include <DX3D/Graphics/GraphicsEngine.h>
 
 void dx3d::Game::run()
 {
@@ -36,6 +37,12 @@ void dx3d::Game::run()
 				{
 				    newScale = 1.0f;
 				    scaleChanged = true;
+				}
+
+				if (msg.wParam == VK_SPACE)
+				{
+					GraphicsEngine::toggleRotation();
+					DX3DLog(getLogger(), Logger::LogLevel::Info, "Space Key Pressed - Rotation Toggled");
 				}
 				 
 				if (scaleChanged)
